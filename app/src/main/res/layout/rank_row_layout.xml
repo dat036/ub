@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rankingLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp"
+    android:background="#86E447">
+    <ImageView
+        android:src="@drawable/cho1"
+        android:id="@+id/avatar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:padding="10dp"
+        />
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/avatar"
+        android:text="Họ và tên"
+        android:textSize="30dp"
+        android:textColor="#BF06F1"/>
+    <TextView
+        android:id="@+id/txtJob"
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/avatar"
+        android:layout_below="@+id/txtName"
+        android:text="Job"
+        android:textSize="20dp"
+        android:textColor="#BF06F1"/>
+
+    <TextView
+        android:id="@+id/txtScore"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:text="20"
+        android:textColor="#0A2BFA"
+        android:textSize="30dp" />
+
+</RelativeLayout>

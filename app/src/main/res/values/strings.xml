@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ub</string>
+
+    <string name="country_prompt">Chọn Tỉnh/Thành Phố</string>
+    <string-array name="country_arrays">
+        <item>Student</item>
+        <item>Employee</item>
+    </string-array>
+</resources>
