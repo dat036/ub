@@ -238,41 +238,41 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
         AsyncTaskUploadClassOBJ.execute();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.imgeCheckout : {
-                showPictureDialog();
-                break;
-            }
-            case R.id.btn_checkout: {
-                Toast.makeText(this, "Check out sucessful", Toast.LENGTH_SHORT).show();
-//                nameImageCheckout = "abc";
-//                UploadImageToServer();
-//                break;
-            }
-        }
-    }
-
 //    @Override
 //    public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.btn_checkout: {
-//                /* xét tên ảnh từ name wastes
-//                 xét tên ảnh từ name wastes + time
-//                 */
-//                nameImageCheckout = "abc";
-//                UploadImageToServer();
-////                Intent intent = new Intent();
-////                intent.putExtra(codeCheck,"1");
-//                break;
-//            }
-//            case R.id.imgeCheckout: {
+//        switch (v.getId()){
+//            case R.id.imgeCheckout : {
 //                showPictureDialog();
 //                break;
 //            }
+//            case R.id.btn_checkout: {
+//                Toast.makeText(this, "Check out sucessful", Toast.LENGTH_SHORT).show();
+////                nameImageCheckout = "abc";
+////                UploadImageToServer();
+////                break;
+//            }
 //        }
 //    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_checkout: {
+                /* xét tên ảnh từ name wastes
+                 xét tên ảnh từ name wastes + time
+                 */
+                nameImageCheckout = "abc";
+                UploadImageToServer();
+//                Intent intent = new Intent();
+//                intent.putExtra(codeCheck,"1");
+                break;
+            }
+            case R.id.imgeCheckout: {
+                showPictureDialog();
+                break;
+            }
+        }
+    }
 
     public class ImageProcessClass {
 

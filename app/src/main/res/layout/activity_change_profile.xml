@@ -1,19 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout android:background="@color/color_green"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="40dp"
-        android:text="Your Profile"
-        android:textStyle="bold"
-        android:layout_gravity="center"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:weightSum="3"
+        >
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="2"
+            android:text="Your Profile"
+            android:textColor="@color/color_white"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginBottom="12dp"
+            android:layout_weight="1"
+            android:text="Logout"
+            android:textColor="@color/color_white"
+            android:textSize="25sp" />
+
+    </RelativeLayout>
+
+
 
     <LinearLayout
         android:background="#BFF38F"
@@ -22,34 +49,45 @@
 
         <ImageView
             android:id="@+id/imgAva"
-            android:layout_width="123dp"
+            android:layout_width="104dp"
             android:layout_height="130dp"
             android:layout_margin="10dp"
-            android:src="@drawable/cho1" />
+            android:src="@drawable/ic_ava" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/txtScore"
-                android:layout_margin="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Score : "
-                android:textColor="#0C0C0C"
-                android:textSize="25sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
 
             <TextView
-                android:id="@+id/txtMember"
-                android:layout_margin="20dp"
+                android:textSize="30dp"
+                android:textColor="@color/color_white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Member 1"
-                android:textColor="#0C0C0C"
-                android:textSize="25sp" />
-        </LinearLayout>
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="29dp"
+                android:layout_marginLeft="29dp"
+                android:layout_marginTop="73dp"
+                android:text="Score" />
+
+            <TextView
+                android:textSize="30dp"
+                android:textColor="@color/color_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="28dp"
+                android:layout_marginLeft="28dp"
+                android:layout_marginBottom="85dp"
+                android:text="Name" />
+
+
+        </RelativeLayout>
+
 
     </LinearLayout>
 
@@ -62,12 +100,14 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <TextView
-                android:textColor="#0C0C0C"
+                android:textColor="@color/color_white"
                 android:textSize="25sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="First Name: "/>
+
             <EditText
+                android:textColor="@color/color_white"
                 android:id="@+id/edt_fullname"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
@@ -75,12 +115,14 @@
                 />
 
             <TextView
-                android:textColor="#0C0C0C"
+                android:textColor="@color/color_white"
                 android:textSize="25sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Last Name: "/>
+
             <EditText
+                android:textColor="@color/color_white"
                 android:id="@+id/edt_lastName"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
@@ -88,20 +130,21 @@
                 />
 
             <TextView
-                android:textColor="#0C0C0C"
+                android:textColor="@color/color_white"
                 android:textSize="25sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="BirthDay: "/>
 
             <EditText
+                android:textColor="@color/color_white"
                 android:id="@+id/edt_birthDay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp" />
 
             <TextView
-                android:textColor="#0C0C0C"
+                android:textColor="@color/color_white"
                 android:textSize="25sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -113,14 +156,16 @@
                 android:orientation="horizontal">
 
                 <RadioButton
+                    android:textColor="@color/color_white"
                     android:id="@+id/btn_male"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Male"
                     android:textSize="25sp" />
 
                 <RadioButton
+                    android:textColor="@color/color_white"
                     android:id="@+id/btn_female"
                     android:layout_margin="10dp"
                     android:layout_width="wrap_content"
@@ -131,31 +176,29 @@
             </RadioGroup>
 
             <TextView
+                android:textColor="@color/color_white"
                 android:layout_width="wrap_content"
                 android:layout_height="44dp"
                 android:text="Job: "
-                android:textColor="#0C0C0C"
                 android:textSize="25sp" />
 
             <EditText
+                android:textColor="@color/color_white"
                 android:id="@+id/edt_job"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp" />
 
-            <Button
-                android:id="@+id/btn_changePass"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Change Password"/>
-
-            <ImageButton
-                android:id="@+id/btn_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/ic_save_black_24dp" />
+          <Button
+              android:id="@+id/btn_save"
+              android:textSize="30dp"
+              android:textColor="@color/color_green"
+              android:background="@color/color_white"
+              android:layout_gravity="center"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="->"
+              />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

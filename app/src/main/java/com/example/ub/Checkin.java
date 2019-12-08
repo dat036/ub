@@ -82,7 +82,7 @@ public class Checkin extends AppCompatActivity implements  View.OnClickListener{
     public void anhXa() {
         btn_checkin = (Button) findViewById(R.id.btn_checkin);
         imageView = (ImageView) findViewById(R.id.imageCheckin);
-        edtNote = (EditText) findViewById(R.id.edt_note);
+//        edtNote = (EditText) findViewById(R.id.edt_note);
     }
 
     private void showPictureDialog() {

@@ -50,7 +50,7 @@ public class ChangeProfile extends AppCompatActivity implements View.OnClickList
     private TextView txtScore;
     private TextView txtMember;
     private Button btnChangePass;
-    private ImageButton btnSave;
+    private Button btnSave;
     private ImageView ava;
 
 
@@ -70,7 +70,6 @@ public class ChangeProfile extends AppCompatActivity implements View.OnClickList
             String gd= "Female";
         }
         btnSave.setOnClickListener(this);
-        btnChangePass.setOnClickListener(this);
         edtBirthDate.setOnClickListener(this);
 //        Intent intent = getIntent();
 ////        emailReceive = intent.getStringExtra(getData);
@@ -83,10 +82,10 @@ public class ChangeProfile extends AppCompatActivity implements View.OnClickList
         edtBirthDate = (EditText) findViewById(R.id.edt_birthDay);
         rbMale = (RadioButton) findViewById(R.id.btn_male);
         rbFemale = (RadioButton) findViewById(R.id.btn_female);
-        txtMember = (TextView) findViewById(R.id.txtMember);
+//        txtMember = (TextView) findViewById(R.id.txtMember);
         txtScore = (TextView) findViewById(R.id.txtScore);
-        btnChangePass = (Button) findViewById(R.id.btn_changePass);
-        btnSave = (ImageButton) findViewById(R.id.btn_save);
+//        btnChangePass = (Button) findViewById(R.id.btn_changePass);
+        btnSave = (Button) findViewById(R.id.btn_save);
         ava = (ImageView) findViewById(R.id.imgAva);
     }
     private void getUserData(String url , String email) {
@@ -132,10 +131,10 @@ public class ChangeProfile extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btn_changePass: {
-                Toast.makeText(this, "ABC", Toast.LENGTH_SHORT).show();
-                break;
-            }
+//            case R.id.btn_changePass: {
+//                Toast.makeText(this, "ABC", Toast.LENGTH_SHORT).show();
+//                break;
+//            }
             case R.id.btn_save: {
 //                upload("http://192.168.1.7/ub/updateProfile.php");
                 Toast.makeText(this, "Change Succesfuld", Toast.LENGTH_SHORT).show();

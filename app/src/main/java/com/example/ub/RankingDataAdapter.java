@@ -1,8 +1,10 @@
 package com.example.ub;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.media.Image;
+import android.os.Build;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +14,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 
 import org.w3c.dom.Text;
 
@@ -44,11 +48,12 @@ public class RankingDataAdapter extends BaseAdapter {
     }
 
     private class ViewHolder{
-        TextView tvHoTen , tvJob, tvScore;
+        TextView tvHoTen , tvJob, tvScore , tvNumber;
         ImageView avatar;
         RelativeLayout relativeLayout;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -56,6 +61,7 @@ public class RankingDataAdapter extends BaseAdapter {
             holder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(layout,null);
+            holder.tvNumber = convertView.findViewById(R.id.txtNumber);
             holder.tvHoTen = (TextView) convertView.findViewById(R.id.txtName);
             holder.tvJob   = (TextView) convertView.findViewById(R.id.txtJob);
             holder.tvScore = (TextView) convertView.findViewById(R.id.txtScore);
@@ -69,18 +75,13 @@ public class RankingDataAdapter extends BaseAdapter {
         holder.tvHoTen.setText(user.getName());
         holder.tvJob.setText(user.getJob());
         holder.tvScore.setText(String.valueOf(user.getScore()));
+        holder.tvNumber.setText(String.valueOf(position+1));
         if(position%2 == 0){
-            holder.relativeLayout.setBackgroundColor(Color.rgb(152,218,106));
-            Log.d("AA","123");
-
-        }
-        if(user.getName().equals("Hien"))
-        {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(111,111,111 ,111);
-            Log.d("AA","222");
-            holder.relativeLayout.setLayoutParams(params);
-            
+            int intColor = 11796403;
+            String hexColor = String.format("#%06X", (0xFFFFFF & intColor));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                holder.relativeLayout.setBackgroundTintList(ColorStateList.valueOf(11796403));
+            }
 
         }
         return convertView;
