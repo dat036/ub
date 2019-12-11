@@ -77,12 +77,7 @@ public class RankingDataAdapter extends BaseAdapter {
         holder.tvScore.setText(String.valueOf(user.getScore()));
         holder.tvNumber.setText(String.valueOf(position+1));
         if(position%2 == 0){
-            int intColor = 11796403;
-            String hexColor = String.format("#%06X", (0xFFFFFF & intColor));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                holder.relativeLayout.setBackgroundTintList(ColorStateList.valueOf(11796403));
-            }
-
+            holder.relativeLayout.setBackgroundColor(Color.parseColor("#008000"));
         }
         return convertView;
     }

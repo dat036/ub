@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Checkin"
-    android:background="#7EDB1F"
+    android:background="@color/color_green"
     android:orientation="vertical">
 
 
@@ -23,21 +23,30 @@
         android:textSize="20dp"
         android:textStyle="bold"
         android:textColor="@color/color_white"
-        android:id="@+id/txt_process"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
         android:layout_marginLeft="36dp"
         android:layout_marginTop="32dp"
-        android:text="Progress" />
+        android:text="Progress of clean waste" />
 
     <SeekBar
         android:id="@+id/sbProcess"
         android:max="100"
-        android:min="0"
-        android:layout_marginHorizontal="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="60dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <TextView
+        android:textSize="@dimen/sp_20"
+        android:layout_margin="5dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_white"
+        android:text="Percent waste clean: "
+        android:id="@+id/txt_process"/>
 
     <TextView
         android:layout_marginTop="5dp"
@@ -93,16 +102,16 @@
             android:textColor="@color/color_white" />
 
         <TextView
-            android:layout_marginTop="10dp"
-            android:textSize="18dp"
-            android:layout_below="@+id/txtMaterial"
             android:id="@+id/txtSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/txtMaterial"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/tb_material"
             android:text="Size of "
             android:textColor="@color/color_white"
-            android:layout_toRightOf="@id/tb_material"
-            android:layout_marginLeft="10dp" />
+            android:textSize="18dp" />
 
         <CheckBox
             android:textSize="18dp"
@@ -131,16 +140,15 @@
 
 
     <Button
-        android:textColor="@color/color_black"
-        android:visibility="visible"
-        android:layout_margin="30dp"
-        android:background="@color/color_white"
-        android:textSize="15dp"
-        android:layout_gravity="center"
         android:id="@+id/btn_checkout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="52dp"
-        android:text="Check-out" />
-
+        android:layout_gravity="center"
+        android:layout_margin="50dp"
+        android:background="@color/color_white"
+        android:padding="10dp"
+        android:text="Checkout"
+        android:textColor="@color/color_green"
+        android:textSize="@dimen/sp_20"
+        android:visibility="visible" />
 </LinearLayout>

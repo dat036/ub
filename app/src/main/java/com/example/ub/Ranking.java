@@ -21,7 +21,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class Ranking extends AppCompatActivity {
-    private String urlGetUser = "http://uberwaste.000webhostapp.com/file_php/getUser.php";
+    private String urlGetUser = "http://192.168.1.6/ub/getRanking.php";
     ArrayList<User> arrayUser;
     ListView lvUser;
     RankingDataAdapter rankingDataAdapter;
@@ -36,30 +36,28 @@ public class Ranking extends AppCompatActivity {
         arrayUser = new ArrayList<>();
         getData(urlGetUser);
 //        new getData1();
-        loadData();
-        Log.d("CC", "1");
+//        loadData();
         rankingDataAdapter = new RankingDataAdapter(this, R.layout.rank_row_layout, arrayUser);
         lvUser.setAdapter(rankingDataAdapter);
 
     }
+
     private void getData(String url) {
-        Log.d("CCC", "2");
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.d("CCC", "1");
                         for (int i = 0; i < response.length(); i++) {
-                            Log.d("CCC", String.valueOf(response.length()));
                             try {
                                 JSONObject object = response.getJSONObject(i);
-                                Log.d("AAA", object.getString("volunteer_lastName"));
+                                Log.d("aaa",object.getString("volunteer_lastName"));
+                                Log.d("aaa",String.valueOf(object.getString("volunteer_score")));
                                 arrayUser.add(new User(
                                         object.getString("volunteer_lastName"),
                                         object.getString("volunteer_job"),
                                         object.getInt("volunteer_score"),
-                                        object.getString("volunteer_image")
+                                        object.getString("volunteer_lastName")
                                 ));
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -75,31 +73,5 @@ public class Ranking extends AppCompatActivity {
         );
         requestQueue.add(jsonArrayRequest);
     }
-
-    private void loadData(){
-        class LoadData extends AsyncTask<Void, Void, Boolean> {
-
-
-            @Override
-            protected Boolean doInBackground(Void... voids) {
-                Log.d("abc","1");
-                getData(urlGetUser);
-                return true;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean aBoolean) {
-                super.onPostExecute(aBoolean);
-                LoadData ld = new LoadData();
-                ld.execute();
-            }
-
-            //            @Override
-//            protected void onPostExecute(Void aVoid) {
-//                super.onPostExecute(aVoid);
-//                LoadData ld = new LoadData();
-//                ld.execute();
-//            }
-        }
-    }
 }
+

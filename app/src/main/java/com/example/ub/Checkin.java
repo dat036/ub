@@ -12,13 +12,24 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -35,23 +46,19 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 public class Checkin extends AppCompatActivity implements  View.OnClickListener{
-    private String waste_address;
+    private int wasteId_Received = 0;
+    private int volunteerId_Received = 0;
     private String codeCheck = "1";
-    private EditText edtNote;
     private Button btn_checkin;
     private ImageView imageView;
     private int GALLERY = 1, CAMERA = 2;
     Bitmap FixBitmap;
     String ImageTag = "image_tag";
-    String ImageName = "image_data";
-    String User_id = "user_id";
-    String Waste_longtitude = "longtitude";
-    String Waste_latitude = "latitude";
+    String ImageDat = "image_dat";
+    String JoinID = "join_id";
     ByteArrayOutputStream byteArrayOutputStream;
     byte[] byteArray;
     String ConvertImage;
-    String nameImageCheckin = "";
-    String name_userId = "";
     HttpURLConnection httpURLConnection;
     URL url;
     OutputStream outputStream;
@@ -60,13 +67,17 @@ public class Checkin extends AppCompatActivity implements  View.OnClickListener{
     BufferedReader bufferedReader;
     StringBuilder stringBuilder;
     boolean check = true;
-    String urlCheckin = "http://192.168.1.7/ub/checkin.php";
-
+    String urlCheckin = "http://192.168.1.6/ub/checkin.php";
+    String urlGetJoin = "http://192.168.1.6/ub/getJoin.php";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(getWindow().FEATURE_NO_TITLE);
         setContentView(R.layout.activity_checkin);
+        // intent waste + volunteer id qua day;
+
+        // wasteId_Received = getIntent().getIntExtra()
+        // wasteId_Received = getIntent().getIntExtra()
+        getJoinId(urlGetJoin, wasteId_Received,volunteerId_Received );
         byteArrayOutputStream = new ByteArrayOutputStream();
         anhXa();
         btn_checkin.setOnClickListener(this);
@@ -82,7 +93,6 @@ public class Checkin extends AppCompatActivity implements  View.OnClickListener{
     public void anhXa() {
         btn_checkin = (Button) findViewById(R.id.btn_checkin);
         imageView = (ImageView) findViewById(R.id.imageCheckin);
-//        edtNote = (EditText) findViewById(R.id.edt_note);
     }
 
     private void showPictureDialog() {
@@ -152,7 +162,7 @@ public class Checkin extends AppCompatActivity implements  View.OnClickListener{
         }
     }
 
-    public void UploadImageToServer() {
+    public void UploadImageToServer(final String joinID, final String nameImage) {
 
         FixBitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
 
@@ -173,7 +183,6 @@ public class Checkin extends AppCompatActivity implements  View.OnClickListener{
 
                 super.onPostExecute(string1);
                 Toast.makeText(Checkin.this, string1, Toast.LENGTH_LONG).show();
-                edtNote.setText(string1);
             }
 
             @Override
@@ -182,10 +191,9 @@ public class Checkin extends AppCompatActivity implements  View.OnClickListener{
                 ImageProcessClass imageProcessClass = new ImageProcessClass();
 
                 HashMap<String, String> HashMapParams = new HashMap<String, String>();
-
-                HashMapParams.put(User_id, name_userId);
-                HashMapParams.put(ImageName, ConvertImage);
-                HashMapParams.put(ImageTag, nameImageCheckin);
+                HashMapParams.put(JoinID, joinID);
+                HashMapParams.put(ImageTag, nameImage);
+                HashMapParams.put(ImageDat, ConvertImage);
 
                 String FinalData = imageProcessClass.ImageHttpRequest(urlCheckin, HashMapParams);
 
@@ -204,9 +212,9 @@ public class Checkin extends AppCompatActivity implements  View.OnClickListener{
                 /* xét tên ảnh từ name wastes
                  xét tên ảnh từ name wastes + time
                  */
-                Toast.makeText(this, "Upload successful", Toast.LENGTH_SHORT).show();
-                nameImageCheckin = "abc";
-//                UploadImageToServer();
+//                Toast.makeText(this, "Upload successful", Toast.LENGTH_SHORT).show();
+//                 nameImageCheckin = "abc";
+                UploadImageToServer(codeCheck, "Dat123");
 //                Intent intent = new Intent();
 //                intent.putExtra(codeCheck,"1");
                 break;
@@ -282,7 +290,7 @@ public class Checkin extends AppCompatActivity implements  View.OnClickListener{
                 if (check)
                     check = false;
                 else
-                    stringBuilder.append("&;");
+                    stringBuilder.append("&");
 
                 stringBuilder.append(URLEncoder.encode(KEY.getKey(), "UTF-8"));
 
@@ -303,6 +311,35 @@ public class Checkin extends AppCompatActivity implements  View.OnClickListener{
                 Toast.makeText(Checkin.this, "Unable to use Camera..Please Allow us to use Camera", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private void getJoinId(String link, final int waste_id, final int volunteer_id) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, link, null,
+                new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject object = response.getJSONObject(i);
+                                if (object.getInt("waste_id") == waste_id && object.getInt("volunteer_id") == volunteer_id) {
+                                    codeCheck = String.valueOf(object.getInt("join_id"));
+                                    Toast.makeText(Checkin.this, String.valueOf(object.getInt("join_id")), Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        requestQueue.add(jsonArrayRequest);
+        Log.d("AAA", "4");
     }
 }
 

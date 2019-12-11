@@ -60,7 +60,7 @@
             >
 
             <TextView
-                android:textSize="30dp"
+                android:textSize="@dimen/sp_20"
                 android:textColor="@color/color_white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,10 +70,11 @@
                 android:layout_marginStart="29dp"
                 android:layout_marginLeft="29dp"
                 android:layout_marginTop="73dp"
-                android:text="Score" />
+                android:text="" />
 
             <TextView
-                android:textSize="30dp"
+                android:id="@+id/text_email"
+                android:textSize="@dimen/sp_20"
                 android:textColor="@color/color_white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -83,7 +84,7 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginLeft="28dp"
                 android:layout_marginBottom="85dp"
-                android:text="Name" />
+                android:text=""/>
 
 
         </RelativeLayout>
@@ -99,16 +100,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <TextView
                 android:textColor="@color/color_white"
-                android:textSize="25sp"
+                android:textSize="@dimen/sp_20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="First Name: "/>
 
             <EditText
+                android:ems="10"
                 android:textColor="@color/color_white"
-                android:id="@+id/edt_fullname"
+                android:id="@+id/edt_firstName"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,12 +119,13 @@
 
             <TextView
                 android:textColor="@color/color_white"
-                android:textSize="25sp"
+                android:textSize="@dimen/sp_20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Last Name: "/>
 
             <EditText
+                android:ems="10"
                 android:textColor="@color/color_white"
                 android:id="@+id/edt_lastName"
                 android:layout_marginTop="10dp"
@@ -137,6 +141,7 @@
                 android:text="BirthDay: "/>
 
             <EditText
+                android:ems="10"
                 android:textColor="@color/color_white"
                 android:id="@+id/edt_birthDay"
                 android:layout_width="match_parent"
@@ -145,7 +150,7 @@
 
             <TextView
                 android:textColor="@color/color_white"
-                android:textSize="25sp"
+                android:textSize="@dimen/sp_20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Gender: "/>
@@ -162,7 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Male"
-                    android:textSize="25sp" />
+                    android:textSize="@dimen/sp_20" />
 
                 <RadioButton
                     android:textColor="@color/color_white"
@@ -171,7 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Female"
-                    android:textSize="25sp"/>
+                    android:textSize="@dimen/sp_20" />
 
             </RadioGroup>
 
@@ -180,25 +185,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="44dp"
                 android:text="Job: "
-                android:textSize="25sp" />
+                android:textSize="@dimen/sp_20" />
 
             <EditText
                 android:textColor="@color/color_white"
                 android:id="@+id/edt_job"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
+                android:layout_height="wrap_content" />
 
-          <Button
-              android:id="@+id/btn_save"
-              android:textSize="30dp"
-              android:textColor="@color/color_green"
-              android:background="@color/color_white"
-              android:layout_gravity="center"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="->"
-              />
+
+
+            <ImageButton
+                android:id="@+id/btn_save"
+                android:layout_width="118dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_border"
+                android:textColor="@color/color_green"
+                android:src="@drawable/ic_arrow_forward_black_24dp"
+                />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

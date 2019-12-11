@@ -1,14 +1,9 @@
 package com.example.ub;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
-import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -32,26 +29,25 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 public class ChangeProfile extends AppCompatActivity implements View.OnClickListener {
-    private final String gd = "";
-    private String emailReceive ="kdat036@gmail.com";
-    private String getData ="Email";
+    private String gd = "";
+    private int id_Received = 3;
+    private String getData="data";
     private EditText edtFName;
     private EditText edtJob;
     private EditText edtLName;
     private EditText edtBirthDate;
     private RadioButton rbMale;
     private RadioButton rbFemale;
-    private TextView txtScore;
-    private TextView txtMember;
-    private Button btnChangePass;
-    private Button btnSave;
+    private TextView txtEmail;
+    private ImageButton btnSave;
     private ImageView ava;
+    private String urlGetData = "http://192.168.1.6/ub/getUser.php";
+    private String urlUpload = "http://192.168.1.6/ub/updateProfile.php";
 
 
     private static final Pattern NAME_PATTERN =
@@ -64,31 +60,30 @@ public class ChangeProfile extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_change_profile);
         reflect();
         if(rbMale.isChecked()){
-            String gd = "Male";
+             gd = "Male";
         }
         else{
-            String gd= "Female";
+             gd= "Female";
         }
         btnSave.setOnClickListener(this);
         edtBirthDate.setOnClickListener(this);
 //        Intent intent = getIntent();
-////        emailReceive = intent.getStringExtra(getData);
-        getUserData("http://192.168.1.7/ub/getUser.php",emailReceive);
+////        idReceived = intent.getStringExtra(getData);
+        getUserData(urlGetData, id_Received);
     }
     private void reflect(){
-        edtFName = (EditText) findViewById(R.id.edt_fullname);
+        edtFName = (EditText) findViewById(R.id.edt_firstName);
         edtLName = (EditText) findViewById(R.id.edt_lastName);
         edtJob = (EditText) findViewById(R.id.edt_job);
         edtBirthDate = (EditText) findViewById(R.id.edt_birthDay);
         rbMale = (RadioButton) findViewById(R.id.btn_male);
         rbFemale = (RadioButton) findViewById(R.id.btn_female);
-//        txtMember = (TextView) findViewById(R.id.txtMember);
-        txtScore = (TextView) findViewById(R.id.txtScore);
-//        btnChangePass = (Button) findViewById(R.id.btn_changePass);
-        btnSave = (Button) findViewById(R.id.btn_save);
+        btnSave = (ImageButton) findViewById(R.id.btn_save);
         ava = (ImageView) findViewById(R.id.imgAva);
+        txtEmail = (TextView) findViewById(R.id.text_email);
     }
-    private void getUserData(String url , String email) {
+
+    private void getUserData(String url, final int id) {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>(){
@@ -97,21 +92,17 @@ public class ChangeProfile extends AppCompatActivity implements View.OnClickList
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject object = response.getJSONObject(i);
-                                Log.d("AAA",emailReceive);
-                                Log.d("AAA",object.getString("user_email"));
-                                if (object.getString("user_email").equals(emailReceive)) {
-                                    Log.d("ABC","ASS");
-                                    edtFName.setText(object.getString("user_firstName"));
-                                    edtLName.setText(object.getString("user_lastName"));
-                                    edtBirthDate.setText(object.getString("user_birthDate"));
-                                    edtJob.setText(object.getString("user_job"));
-                                    if (object.getString("user_gender").equals("Male")) {
+                                if (object.getInt("volunteer_id") == id) {
+                                    Log.d("ABC", String.valueOf(object.getInt("volunteer_id")));
+                                    edtFName.setText(object.getString("volunteer_firstName"));
+                                    edtLName.setText(object.getString("volunteer_lastName"));
+                                    edtBirthDate.setText(object.getString("volunteer_birthDate"));
+                                    edtJob.setText(object.getString("volunteer_job"));
+                                    if (object.getString("volunteer_gender").equals("Male")) {
                                         rbMale.setChecked(true);
                                     } else
                                         rbFemale.setChecked(true);
-                                    String x = String.valueOf(object.getInt("user_score"));
-                                    Log.d("AAA",x);
-                                    txtScore.append(x);
+                                    txtEmail.setText(object.getString("volunteer_email"));
                                 }
                                 Toast.makeText(ChangeProfile.this, "Load dữ liệu thành công", Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
@@ -131,22 +122,15 @@ public class ChangeProfile extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-//            case R.id.btn_changePass: {
-//                Toast.makeText(this, "ABC", Toast.LENGTH_SHORT).show();
-//                break;
-//            }
-            case R.id.btn_save: {
-//                upload("http://192.168.1.7/ub/updateProfile.php");
-                Toast.makeText(this, "Change Succesfuld", Toast.LENGTH_SHORT).show();
-                break;
 
+            case R.id.btn_save: {
+                upload(urlUpload);
+                break;
             }
             case R.id.edt_birthDay: {
                 chonNgay();
                 break;
-
             }
-
         }
     }
     private void chonNgay(){
@@ -169,55 +153,43 @@ public class ChangeProfile extends AppCompatActivity implements View.OnClickList
     private void upload(String url){
         final String gender = gd;
         final String fName = edtFName.getText().toString().trim();
-        final String lName = edtLName.getText().toString();
-        final String job = edtJob.getText().toString();
+        Log.d("ABC",gd);
+        Log.d("BBB",fName);
+        final String lName = edtLName.getText().toString().trim();
+        final String job = edtJob.getText().toString().trim();
         final String birhtdate = edtBirthDate.getText().toString();
 //        if (edtFName.getText().toString().isEmpty() || edtLName.getText().toString().isEmpty() || edtJob.getText().toString().isEmpty() || edtBirthDate.getText().toString().isEmpty()) {
 //            Toast.makeText(getApplicationContext(), "You must type all inputs", Toast.LENGTH_SHORT).show();
 //            return;
 //        }
-//        if (!NAME_PATTERN.matcher(fName).matches()) {
+//        if (NAME_PATTERN.matcher(fName).matches()) {
 //            Toast.makeText(getApplicationContext(), "Please enter a valid first name", Toast.LENGTH_SHORT).show();
 //            return;
 //        }
-//        if (!NAME_PATTERN.matcher(lName).matches()) {
+//        if (NAME_PATTERN.matcher(lName).matches()) {
 //            Toast.makeText(getApplicationContext(), "Please enter a valid last name", Toast.LENGTH_SHORT).show();
 //            return;
 //        }
-//        if (!NAME_PATTERN.matcher(job).matches()) {
+//        if (NAME_PATTERN.matcher(job).matches()) {
 //            Toast.makeText(getApplicationContext(), "Please enter a valid job", Toast.LENGTH_SHORT).show();
 //            return;
 //        }
-//        if (passwordInput.contains(" ")) {
-//            Toast.makeText(getApplicationContext(), "Please enter a valid password", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        if (!PASSWORD_PATTERN.matcher(passwordInput).matches()) {
-//            Toast.makeText(getApplicationContext(), "Please enter a valid password", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        if ((password.getText().toString()).length() < 6) {
-//            Toast.makeText(getApplicationContext(), "Password must be 6 -20 characters", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
-//            Toast.makeText(getApplicationContext(), "Password and Confirm Password don't match", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-
         RequestQueue requestQueue = Volley.newRequestQueue(this);
+        Log.d("123","1");
         StringRequest stringRequest = new StringRequest(Request.Method.POST,url ,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if(response.trim() == "Success"){
+                        Log.d("123","2");
+                        if(response.trim() .equals("Success")){
+                            Log.d("123","3");
                             Toast.makeText(ChangeProfile.this, "Update complete", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Response.ErrorListener(){
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Log.d("123","4");
                     }
         }){
             @Override
@@ -228,9 +200,7 @@ public class ChangeProfile extends AppCompatActivity implements View.OnClickList
                 params.put("gender",gender);
                 params.put("birthDate",birhtdate);
                 params.put("job",job);
-                params.put("email",emailReceive);
-
-
+                params.put("id", String.valueOf(id_Received));
                 return params;
             }
         };

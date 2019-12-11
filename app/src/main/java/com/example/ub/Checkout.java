@@ -1,10 +1,8 @@
 package com.example.ub;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,11 +17,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -53,31 +53,33 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 public class Checkout extends AppCompatActivity implements View.OnClickListener{
-    private  String Percent = "percent";
-    private int percent = 0;
-    private RadioButton No0Percent;
-    private RadioButton No50Percent;
-    private RadioButton No100Percent;
+    private String pPeople = "0";
+    private String pMaterial = "0";
+    private String pSize = "0";
     private TextView txt_material;
     private TextView txt_size;
     private TextView txt_people;
     private CheckBox cb_material;
     private CheckBox cb_size;
     private CheckBox cb_people;
-    private String waste_Address = "89Le Loi";
-    private EditText edtNote;
+    private String waste_id = "";
     private Button btn_checkout;
     private ImageView imgeCheckout;
     private int GALLERY = 1, CAMERA = 2;
     Bitmap FixBitmap;
-    String ImageTag = "image_tag";
-    String ImageName = "image_data";
-    String User_id = "user_id";
+    String TextImageTag = "image_tag";
+    String TextImageName = "image_dat";
+    String TextProcess = "process";
+    String TextCheckin_id = "checkin_id";
+    String TextSize = "size";
+    String TextPeople = "people";
+    String TextMaterial = "material";
+
     ByteArrayOutputStream byteArrayOutputStream;
     byte[] byteArray;
     String ConvertImage;
-    String nameImageCheckout = "";
-    String name_userId = "";
+    String ImageCheckout = "";
+    String userId = "";
     HttpURLConnection httpURLConnection;
     URL url;
     OutputStream outputStream;
@@ -86,7 +88,9 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
     BufferedReader bufferedReader;
     StringBuilder stringBuilder;
     boolean check = true;
-    String urlCheckin = "http://192.168.1.7/ub/checkout.php";
+    private SeekBar sk_process;
+    private TextView txt_process;
+    String urlCheckout = "http://10.141.128.59/ub/checkout.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +99,28 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
         setContentView(R.layout.activity_checkout);
         byteArrayOutputStream = new ByteArrayOutputStream();
         anhXa();
-        getWasteData("http://192.168.1.7/ub/getWaste.php",waste_Address);
+        txt_process.setText(String.valueOf(sk_process.getProgress())+"%");
+        sk_process.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int process = 0;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                process = progress;
+                txt_process.setText(String.valueOf(process)+"%");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        getWasteData("http://10.141.128.59/ub/getWaste.php", "2");
         btn_checkout.setOnClickListener(this);
         imgeCheckout.setOnClickListener(this);
 
@@ -115,6 +140,8 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
         cb_material = (CheckBox) findViewById(R.id.tb_material);
         cb_size = (CheckBox) findViewById(R.id.tb_size);
         cb_people = (CheckBox) findViewById(R.id.tb_people);
+        sk_process = findViewById(R.id.sbProcess);
+        txt_process = findViewById(R.id.txt_process);
     }
 
     private void showPictureDialog() {
@@ -184,17 +211,16 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    public void UploadImageToServer() {
+    public void UploadImageToServer(final String checkinId, final String txtProcess, final String nameImage) {
         if(cb_material.isChecked()){
-            percent +=33;
+            pMaterial = "1";
         }
         if(cb_people.isChecked()){
-            percent +=33;
+            pPeople = "1";
         }
         if(cb_size.isChecked()){
-            percent +=33;
+            pSize = "1";
         }
-        final String pc = String.valueOf(percent);
         FixBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
 
         byteArray = byteArrayOutputStream.toByteArray();
@@ -202,10 +228,11 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
         ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT).toString();
 
         class AsyncTaskUploadClass extends AsyncTask<Void, Void, String> {
+            private ProgressDialog progressDialog;
 
             @Override
             protected void onPreExecute() {
-
+                progressDialog.setMessage("Doing something, pleasewait");
                 super.onPreExecute();
             }
 
@@ -214,7 +241,6 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
 
                 super.onPostExecute(string1);
                 Toast.makeText(Checkout.this, string1, Toast.LENGTH_LONG).show();
-                edtNote.setText(string1);
             }
 
             @Override
@@ -223,14 +249,14 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
                 Checkout.ImageProcessClass imageProcessClass = new Checkout.ImageProcessClass();
 
                 HashMap<String, String> HashMapParams = new HashMap<String, String>();
-
-                HashMapParams.put(User_id, name_userId);
-                HashMapParams.put(ImageName, ConvertImage);
-                HashMapParams.put(ImageTag, nameImageCheckout);
-                HashMapParams.put(Percent,pc);
-
-                String FinalData = imageProcessClass.ImageHttpRequest(urlCheckin, HashMapParams);
-
+                HashMapParams.put(TextCheckin_id, checkinId);
+                HashMapParams.put(TextImageName, ConvertImage);
+                HashMapParams.put(TextImageTag, nameImage);
+                HashMapParams.put(TextProcess, txtProcess);
+                HashMapParams.put(TextSize, pSize);
+                HashMapParams.put(TextPeople, pPeople);
+                HashMapParams.put(TextMaterial, pMaterial);
+                String FinalData = imageProcessClass.ImageHttpRequest(urlCheckout, HashMapParams);
                 return FinalData;
             }
         }
@@ -258,11 +284,7 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_checkout: {
-                /* xét tên ảnh từ name wastes
-                 xét tên ảnh từ name wastes + time
-                 */
-                nameImageCheckout = "abc";
-                UploadImageToServer();
+                UploadImageToServer("2",txt_process.getText().toString(),"hahaha");
 //                Intent intent = new Intent();
 //                intent.putExtra(codeCheck,"1");
                 break;
@@ -339,7 +361,7 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
                 if (check)
                     check = false;
                 else
-                    stringBuilder.append("&;");
+                    stringBuilder.append("&");
 
                 stringBuilder.append(URLEncoder.encode(KEY.getKey(), "UTF-8"));
 
@@ -362,7 +384,7 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    private void getWasteData(String link, final String waste_address) {
+    private void getWasteData(String link, final String waste_id) {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, link, null,
                 new Response.Listener<JSONArray>() {
@@ -372,7 +394,7 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject object = response.getJSONObject(i);
-                                if (object.getString("waste_adress").equals(waste_address)){
+                                if (object.getString("waste_id").equals(waste_id)) {
                                         txt_material.setText(object.getString("waste_material"));
                                         txt_size.setText(String.valueOf(object.getString("waste_size")));
                                         txt_people.setText(String.valueOf(object.getInt("waste_people")));
@@ -391,6 +413,4 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
         });
         requestQueue.add(jsonArrayRequest);
     }
-
 }
-
