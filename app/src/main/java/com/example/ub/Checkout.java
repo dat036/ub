@@ -105,6 +105,13 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(getWindow().FEATURE_NO_TITLE);
         setContentView(R.layout.activity_checkout);
+        /*
+            get intent ở đây
+            kiểu int
+            gán vô 2 biến
+            wasteId_Received =..
+            volunteerId_Received
+         */
         getCheckinID(urlGetCheckinId,wasteId_Received,volunteerId_Received);
         byteArrayOutputStream = new ByteArrayOutputStream();
         anhXa();
@@ -279,8 +286,8 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
                 String getProcess2 = getProcess1.substring(0,getProcess1.length()-1);
                 UploadImageToServer(checkinID,getProcess2,  "ckImage"+checkinID);
                 uploadScore(urlUpdateScore,volunteerId_Received);
+                //về màn hình chính
 //                Intent intent = new Intent();
-//                intent.putExtra(codeCheck,"1");
                 break;
             }
             case R.id.imgeCheckout: {

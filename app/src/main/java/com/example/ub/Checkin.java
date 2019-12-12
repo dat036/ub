@@ -73,10 +73,13 @@ public class Checkin extends AppCompatActivity implements  View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkin);
-        // intent waste + volunteer id qua day;
-
-        // wasteId_Received = getIntent().getIntExtra()
-        // wasteId_Received = getIntent().getIntExtra()
+        /*
+            get intent ở đây
+            kiểu int
+            gán vô 2 biến
+            wasteId_Received =..
+            volunteerId_Received
+         */
         getJoinId(urlGetJoin, wasteId_Received,volunteerId_Received );
         byteArrayOutputStream = new ByteArrayOutputStream();
         anhXa();
@@ -209,14 +212,10 @@ public class Checkin extends AppCompatActivity implements  View.OnClickListener{
         switch (v.getId())
         {
             case R.id.btn_checkin : {
-                /* xét tên ảnh từ name wastes
-                 xét tên ảnh từ name wastes + time
-                 */
-//                Toast.makeText(this, "Upload successful", Toast.LENGTH_SHORT).show();
-//                 nameImageCheckin = "abc";
+
                 UploadImageToServer(codeCheck, "Image"+codeCheck);
+                //về màn hình chính
 //                Intent intent = new Intent();
-//                intent.putExtra(codeCheck,"1");
                 break;
             }
             case R.id.imageCheckin : {
