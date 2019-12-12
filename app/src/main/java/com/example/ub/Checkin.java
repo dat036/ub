@@ -46,8 +46,8 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 public class Checkin extends AppCompatActivity implements  View.OnClickListener{
-    private int wasteId_Received = 0;
-    private int volunteerId_Received = 0;
+    private int wasteId_Received = 1;
+    private int volunteerId_Received = 4;
     private String codeCheck = "1";
     private Button btn_checkin;
     private ImageView imageView;
@@ -214,7 +214,7 @@ public class Checkin extends AppCompatActivity implements  View.OnClickListener{
                  */
 //                Toast.makeText(this, "Upload successful", Toast.LENGTH_SHORT).show();
 //                 nameImageCheckin = "abc";
-                UploadImageToServer(codeCheck, "Dat123");
+                UploadImageToServer(codeCheck, "Image"+codeCheck);
 //                Intent intent = new Intent();
 //                intent.putExtra(codeCheck,"1");
                 break;

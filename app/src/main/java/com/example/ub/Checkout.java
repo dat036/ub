@@ -25,11 +25,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -53,6 +55,8 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 public class Checkout extends AppCompatActivity implements View.OnClickListener{
+    private int wasteId_Received = 3;
+    private int volunteerId_Received = 3;
     private String pPeople = "0";
     private String pMaterial = "0";
     private String pSize = "0";
@@ -90,13 +94,18 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
     boolean check = true;
     private SeekBar sk_process;
     private TextView txt_process;
-    String urlCheckout = "http://10.141.128.59/ub/checkout.php";
+    String urlCheckout = "http://192.168.1.6/ub/checkout.php";
+    String urlGetCheckinId = "http://192.168.1.6/ub/getCheckinId.php";
+    String urlGetWasteData= "http://192.168.1.6/ub/getWaste.php";
+    String urlUpdateScore = "http://192.168.1.6/ub/score.php";
+    private String  checkinID = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(getWindow().FEATURE_NO_TITLE);
         setContentView(R.layout.activity_checkout);
+        getCheckinID(urlGetCheckinId,wasteId_Received,volunteerId_Received);
         byteArrayOutputStream = new ByteArrayOutputStream();
         anhXa();
         txt_process.setText(String.valueOf(sk_process.getProgress())+"%");
@@ -120,7 +129,7 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
             }
         });
 
-        getWasteData("http://10.141.128.59/ub/getWaste.php", "2");
+        getWasteData(urlGetWasteData, wasteId_Received);
         btn_checkout.setOnClickListener(this);
         imgeCheckout.setOnClickListener(this);
 
@@ -228,11 +237,9 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
         ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT).toString();
 
         class AsyncTaskUploadClass extends AsyncTask<Void, Void, String> {
-            private ProgressDialog progressDialog;
 
             @Override
             protected void onPreExecute() {
-                progressDialog.setMessage("Doing something, pleasewait");
                 super.onPreExecute();
             }
 
@@ -264,27 +271,14 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
         AsyncTaskUploadClassOBJ.execute();
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()){
-//            case R.id.imgeCheckout : {
-//                showPictureDialog();
-//                break;
-//            }
-//            case R.id.btn_checkout: {
-//                Toast.makeText(this, "Check out sucessful", Toast.LENGTH_SHORT).show();
-////                nameImageCheckout = "abc";
-////                UploadImageToServer();
-////                break;
-//            }
-//        }
-//    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_checkout: {
-                UploadImageToServer("2",txt_process.getText().toString(),"hahaha");
+                String getProcess1 = txt_process.getText()+"";
+                String getProcess2 = getProcess1.substring(0,getProcess1.length()-1);
+                UploadImageToServer(checkinID,getProcess2,  "ckImage"+checkinID);
+                uploadScore(urlUpdateScore,volunteerId_Received);
 //                Intent intent = new Intent();
 //                intent.putExtra(codeCheck,"1");
                 break;
@@ -384,7 +378,7 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    private void getWasteData(String link, final String waste_id) {
+    private void getWasteData(String link, final int waste_id) {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, link, null,
                 new Response.Listener<JSONArray>() {
@@ -394,7 +388,7 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject object = response.getJSONObject(i);
-                                if (object.getString("waste_id").equals(waste_id)) {
+                                if (object.getInt("waste_id") == waste_id) {
                                         txt_material.setText(object.getString("waste_material"));
                                         txt_size.setText(String.valueOf(object.getString("waste_size")));
                                         txt_people.setText(String.valueOf(object.getInt("waste_people")));
@@ -413,4 +407,67 @@ public class Checkout extends AppCompatActivity implements View.OnClickListener{
         });
         requestQueue.add(jsonArrayRequest);
     }
+
+    private void getCheckinID(String link, final int waste_id, final int volunteer_id) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, link, null,
+                new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject object = response.getJSONObject(i);
+                                if (object.getInt("waste_id") == waste_id && object.getInt("volunteer_id") == volunteer_id) {
+                                    checkinID = String.valueOf(object.getInt("checkin_id"));
+                                    Log.d("AAAA",checkinID+" ");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        requestQueue.add(jsonArrayRequest);
+    }
+
+    private void uploadScore(String url, final int volunteerId){
+        String rank = (String) txt_size.getText();
+        String scoreRank = "0";
+        if(rank.equals("Small"))
+            scoreRank = "5";
+        else if(rank.equals("Medium"))
+            scoreRank = "10";
+        else
+            scoreRank ="20";
+        Log.d("AAB",scoreRank);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        final String finalScoreRank = scoreRank;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("volunteer_id",String.valueOf(volunteerId));
+                params.put("score", finalScoreRank);
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
 }
+

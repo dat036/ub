@@ -161,6 +161,7 @@ public class ChangeProfile extends AppCompatActivity implements View.OnClickList
 //        if (edtFName.getText().toString().isEmpty() || edtLName.getText().toString().isEmpty() || edtJob.getText().toString().isEmpty() || edtBirthDate.getText().toString().isEmpty()) {
 //            Toast.makeText(getApplicationContext(), "You must type all inputs", Toast.LENGTH_SHORT).show();
 //            return;
+//            return;
 //        }
 //        if (NAME_PATTERN.matcher(fName).matches()) {
 //            Toast.makeText(getApplicationContext(), "Please enter a valid first name", Toast.LENGTH_SHORT).show();
